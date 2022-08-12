@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "774658616987",
+    "project_id": "attendance-collab",
+    "storage_bucket": "attendance-collab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774658616987:android:af8df46e3f24291e4a203e",
+        "android_client_info": {
+          "package_name": "com.rds.attendance_collab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774658616987-ld21arqjvc6tuqbhoijkimcmqv3ghhvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNLaGCp2UBOvFkV5-xlKW49pKmebtrIM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774658616987-ld21arqjvc6tuqbhoijkimcmqv3ghhvh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
