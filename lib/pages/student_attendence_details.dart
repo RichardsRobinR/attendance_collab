@@ -32,6 +32,8 @@ class _StudentAttedenceDetailsState extends State<StudentAttedenceDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<DataModelView>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Admin Rewardio"),
@@ -70,52 +72,53 @@ class _StudentAttedenceDetailsState extends State<StudentAttedenceDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            data['attended'] != 0
+                            data['subject_attended']
+                                        [_provider.studentSubjectName] !=
+                                    0
                                 ? ElevatedButton(
                                     onPressed: () {
+                                      Map<String, dynamic> updateSubjectVAlue =
+                                          {
+                                        'Python': data['subject_attended']
+                                                [_provider.studentSubjectName] -
+                                            1
+                                      };
+                                      Map<String, dynamic> updatedData = {
+                                        'subject_attended': updateSubjectVAlue,
+                                      };
+
                                       db
-                                          .collection('users')
-                                          .doc(Provider.of<DataModelView>(
-                                                  context,
-                                                  listen: false)
-                                              .userId)
                                           .collection('students')
-                                          .doc(Provider.of<DataModelView>(
-                                                  context,
-                                                  listen: false)
-                                              .studentDocId)
-                                          .collection("students_details")
-                                          .doc(document.id)
-                                          .update({
-                                        "attended": data["attended"] - 1
-                                      });
+                                          .doc(data['usn_number'])
+                                          .update(updatedData);
                                     },
                                     child: Icon(Icons.remove))
                                 : Container(),
                             SizedBox(
                               width: 10,
                             ),
-                            Text("${data['attended']}"
+                            Text(
+                                "${data['subject_attended'][_provider.studentSubjectName]}"
                                 "/"
-                                "${Provider.of<DataModelView>(context, listen: false).subjectTotalClasses}"),
+                                "${_provider.subjectTotalClasses}"),
                             SizedBox(
                               width: 10,
                             ),
                             ElevatedButton(
                                 onPressed: () {
+                                  Map<String, dynamic> updateSubjectVAlue = {
+                                    'Python': data['subject_attended']
+                                            [_provider.studentSubjectName] +
+                                        1
+                                  };
+                                  Map<String, dynamic> updatedData = {
+                                    'subject_attended': updateSubjectVAlue,
+                                  };
+
                                   db
-                                      .collection('users')
-                                      .doc(Provider.of<DataModelView>(context,
-                                              listen: false)
-                                          .userId)
                                       .collection('students')
-                                      .doc(Provider.of<DataModelView>(context,
-                                              listen: false)
-                                          .studentDocId)
-                                      .collection("students_details")
-                                      .doc(document.id)
-                                      .update(
-                                          {"attended": data["attended"] + 1});
+                                      .doc(data['usn_number'])
+                                      .update(updatedData);
                                 },
                                 child: Icon(Icons.add)),
                           ],

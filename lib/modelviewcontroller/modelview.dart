@@ -13,8 +13,8 @@ class DataModelView extends ChangeNotifier {
   late Stream<QuerySnapshot> _studentStream;
   Stream<QuerySnapshot> get studentStream => _studentStream;
 
-  String _studentDocId = ' ';
-  String get studentDocId => _studentDocId;
+  String _studentSubjectName = ' ';
+  String get studentSubjectName => _studentSubjectName;
 
   int _subjectTotalClasses = 0;
   int get subjectTotalClasses => _subjectTotalClasses;
@@ -67,22 +67,14 @@ class DataModelView extends ChangeNotifier {
         .doc(_userId)
         .collection('subjects')
         .snapshots();
-    _studentStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(_userId)
-        .collection('students')
-        .snapshots();
   }
 
-  void changeStudentDocIdStreamValue(docId) {
+  void changeStudentDocIdStreamValue(lecturerSubjectName) {
     _studentStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(_userId)
         .collection('students')
-        .doc(docId)
-        .collection("students_details")
+        .where('student_subjects', arrayContains: lecturerSubjectName)
         .snapshots();
-    _studentDocId = docId;
+    _studentSubjectName = lecturerSubjectName;
   }
 
   void changeSubjectTotalClasses(subjectTotalClasses) {
@@ -122,22 +114,38 @@ class DataModelView extends ChangeNotifier {
             print("Added Data with ID: ${documentSnapshot.id}"));
   }
 
-  void addStudents(studentName, studentUsnNumber) {
+  void addStudents() {
+    String studentName = "Dolphin Johnson";
+    String studentUsnNumber = "SB19000";
     final details = <String, dynamic>{
-      "attended": 0,
       "student_name": studentName,
+      'student_subjects': [],
+      'subject_attended': {},
       "usn_number": studentUsnNumber,
     };
 
     db
-        .collection("users")
-        .doc(_userId)
-        .collection('students')
-        .doc(_studentDocId)
-        .collection('students_details')
-        .add(details)
-        .then((documentSnapshot) =>
-            print("Added Data with ID: ${documentSnapshot.id}"));
+        .collection("students")
+        .doc(studentUsnNumber)
+        .set(details)
+        .onError((e, _) => print("Error writing document: $e"));
+  }
+
+  void addStudentsToLecturerSubject() {
+    String studentName = "Dolphin Johnson";
+    String studentUsnNumber = "SB19000";
+    final details = <String, dynamic>{
+      "student_name": studentName,
+      'student_subjects': [],
+      'subject_attended': {},
+      "usn_number": studentUsnNumber,
+    };
+
+    db
+        .collection("students")
+        .doc(studentUsnNumber)
+        .set(details)
+        .onError((e, _) => print("Error writing document: $e"));
   }
 
   droDownListCustom(itemlist, condition) {

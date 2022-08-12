@@ -1,5 +1,5 @@
 import 'package:attendance_collab/modelviewcontroller/modelview.dart';
-import 'package:attendance_collab/pages/databasetingV2/studentdatatest.dart';
+import 'package:attendance_collab/pages/lecturer_login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: StudentDataTest(),
+        home: LecturerLogin(),
       ),
     );
   }
