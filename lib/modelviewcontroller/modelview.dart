@@ -5,19 +5,38 @@ import 'package:flutter/material.dart';
 class DataModelView extends ChangeNotifier {
   var db = FirebaseFirestore.instance;
   String _userId = ' ';
+
   String get userId => _userId;
 
   late Stream<QuerySnapshot> _usersStream;
+
   Stream<QuerySnapshot> get usersStream => _usersStream;
 
   late Stream<QuerySnapshot> _studentStream;
+
   Stream<QuerySnapshot> get studentStream => _studentStream;
 
   String _studentSubjectName = ' ';
+
   String get studentSubjectName => _studentSubjectName;
 
   int _subjectTotalClasses = 0;
+
   int get subjectTotalClasses => _subjectTotalClasses;
+
+  DateTime _selectedDate = DateTime.now();
+
+  DateTime get selectedDate => _selectedDate;
+
+  String _onlyDate = ' ';
+
+  String get onlyDate => _onlyDate;
+
+  int _lecturerSubjectYear = 0;
+  int get lecturerSubjectYear => _lecturerSubjectYear;
+
+  String _lecturerSubjectBranch = ' ';
+  String get lecturerSubjectBranch => _lecturerSubjectBranch;
 
   final List<String> _subjectList = [
     'C Programming',
@@ -25,9 +44,11 @@ class DataModelView extends ChangeNotifier {
     'DBMS',
     'Python'
   ];
+
   List<String> get subjectList => _subjectList;
 
   final List<String> _branchLIst = ['BCA', 'Bsc', 'BBA', 'BCom', 'BA'];
+
   List<String> get branchLIst => _branchLIst;
 
   final List<int> _yearList = [
@@ -35,16 +56,29 @@ class DataModelView extends ChangeNotifier {
     2,
     3,
   ];
+
   List<int> get yearList => _yearList;
 
   String _dropdownSubjectValue = "C Programming";
+
   String get dropdownSubjectValue => _dropdownSubjectValue;
 
   String _dropdownBranchValue = "BCA";
+
   String get dropdownBranchValue => _dropdownBranchValue;
 
   int _dropdownYearValue = 1;
+
   int get dropdownYearValue => _dropdownYearValue;
+
+  void setlecturerSubjectYearAndBranch(year, branch) {
+    _lecturerSubjectYear = year;
+    _lecturerSubjectBranch = branch;
+  }
+
+  void setDefaultDate() {
+    _onlyDate = "${_selectedDate.toLocal()}".split(' ')[0];
+  }
 
   void setSelectedItemSubject(String s) {
     _dropdownSubjectValue = s;
@@ -67,6 +101,10 @@ class DataModelView extends ChangeNotifier {
         .doc(_userId)
         .collection('subjects')
         .snapshots();
+  }
+
+  void setStudentSubjectName(lecturerSubjectName) {
+    _studentSubjectName = lecturerSubjectName;
   }
 
   void changeStudentDocIdStreamValue(lecturerSubjectName) {
@@ -195,5 +233,62 @@ class DataModelView extends ChangeNotifier {
         }).toList(),
       );
     }
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+
+    if (picked != null && picked != _selectedDate) {
+      _selectedDate = picked;
+      _onlyDate = "${_selectedDate.toLocal()}".split(' ')[0];
+      notifyListeners();
+    }
+  }
+
+  void setDateToFalseDefault(docSubjectId) {
+    final details = <String, dynamic>{
+      'subject_attended_v2': {
+        _studentSubjectName: {_onlyDate: false}
+      },
+    };
+
+    db
+        .collection('students')
+        .doc(docSubjectId)
+        .set(details, SetOptions(merge: true));
+    //notifyListeners();
+  }
+
+  void callSetDateToFalseDefaultFun() {
+    db.collection('students').get().then((QuerySnapshot querySnapshot) {
+      for (var data in querySnapshot.docs) {
+        Map<dynamic, dynamic> subject_attended_v2 = data['subject_attended_v2'];
+
+        Map<dynamic, dynamic> subject_of_dates =
+            subject_attended_v2[_studentSubjectName];
+
+        print(data["usn_number"]);
+
+        subject_of_dates.forEach((key, value) {
+          if (key != _onlyDate) {
+            setDateToFalseDefault(data['usn_number']);
+          }
+        });
+      }
+    });
+  }
+
+  void updateAttendenceCheckBoxList(docId, value) {
+    final details = <String, dynamic>{
+      'subject_attended_v2': {
+        _studentSubjectName: {_onlyDate: value}
+      },
+    };
+
+    db.collection('students').doc(docId).set(details, SetOptions(merge: true));
   }
 }

@@ -36,15 +36,8 @@ class _StudentAttedenceDetailsState extends State<StudentAttedenceDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Admin Rewardio"),
-        //backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Setting Icon',
-            onPressed: () {},
-          ),
-        ],
+        title: const Text("Attendance Collab"),
+        backgroundColor: Colors.transparent,
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: _studentStream,

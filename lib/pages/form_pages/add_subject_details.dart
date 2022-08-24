@@ -33,7 +33,7 @@ class _AddSubjectDetailsState extends State<AddSubjectDetails> {
     final _provider = Provider.of<DataModelView>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reward Points"),
+        title: const Text("Attendance Collab"),
         backgroundColor: Colors.transparent,
       ),
       body: Center(

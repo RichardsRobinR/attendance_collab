@@ -31,7 +31,7 @@ class _AddStudentDetailsState extends State<AddStudentDetails> {
     final _provider = Provider.of<DataModelView>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reward Points"),
+        title: const Text("Attendance Collab"),
         backgroundColor: Colors.transparent,
       ),
       // body: Center(
@@ -105,35 +105,51 @@ class _AddStudentDetailsState extends State<AddStudentDetails> {
 
                     print(student_subjects_map[data['usn_number']]);
                     print(student_subjects_map.toString());
-                    return CheckboxListTile(
-                      title: Text(data['student_name'].toString()),
-                      value: student_subjects_map[data['usn_number']],
-                      onChanged: (val) {
-                        setState(
-                          () {
-                            if (val == true) {
-                              student_subjects_map[data['usn_number']] = val!;
-                              db
-                                  .collection('students')
-                                  .doc(data['usn_number'])
-                                  .update({
-                                'student_subjects': FieldValue.arrayUnion(
-                                    [_provider.studentSubjectName])
-                              });
-                            } else {
-                              student_subjects_map[data['usn_number']] = val!;
-                              db
-                                  .collection('students')
-                                  .doc(data['usn_number'])
-                                  .update({
-                                'student_subjects': FieldValue.arrayRemove(
-                                    [_provider.studentSubjectName])
-                              });
-                            }
-                          },
-                        );
-                      },
-                    );
+                    return student_subjects_map.isEmpty
+                        ? const CircularProgressIndicator()
+                        : CheckboxListTile(
+                            title: Text(data['student_name'].toString()),
+                            value: student_subjects_map[data['usn_number']],
+                            onChanged: (val) {
+                              setState(
+                                () {
+                                  if (val == true) {
+                                    student_subjects_map[data['usn_number']] =
+                                        val!;
+                                    db
+                                        .collection('students')
+                                        .doc(data['usn_number'])
+                                        .update({
+                                      'student_subjects': FieldValue.arrayUnion(
+                                          [_provider.studentSubjectName])
+                                    });
+
+                                    final details = <String, dynamic>{
+                                      'subject_attended_v2': {
+                                        _provider.studentSubjectName: {}
+                                      },
+                                    };
+
+                                    db
+                                        .collection('students')
+                                        .doc(data['usn_number'])
+                                        .set(details, SetOptions(merge: true));
+                                  } else {
+                                    student_subjects_map[data['usn_number']] =
+                                        val!;
+                                    db
+                                        .collection('students')
+                                        .doc(data['usn_number'])
+                                        .update({
+                                      'student_subjects':
+                                          FieldValue.arrayRemove(
+                                              [_provider.studentSubjectName])
+                                    });
+                                  }
+                                },
+                              );
+                            },
+                          );
                   })
                   .toList()
                   .cast(),
