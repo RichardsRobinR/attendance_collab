@@ -1,5 +1,5 @@
 import 'package:attendance_collab/modelviewcontroller/modelview.dart';
-import 'package:attendance_collab/pages/lecturer_login.dart';
+import 'package:attendance_collab/widgets/firebase_user_login_status.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +11,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             useMaterial3: true),
         //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: LecturerLogin(),
+        home: const FirebaseUserLoginStatus(),
         //home: CustomNavigationBar(),
       ),
     );

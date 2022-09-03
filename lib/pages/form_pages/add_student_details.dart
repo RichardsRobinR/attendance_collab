@@ -31,7 +31,7 @@ class _AddStudentDetailsState extends State<AddStudentDetails> {
     final _provider = Provider.of<DataModelView>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Attendance Collab"),
+        title: const Text("Add Student"),
         backgroundColor: Colors.transparent,
       ),
       // body: Center(

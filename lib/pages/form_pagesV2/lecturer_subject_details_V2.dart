@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:attendance_collab/pages/form_pages/add_student_details.dart';
+import 'package:attendance_collab/pages/form_pages/add_subject_details.dart';
 import 'package:attendance_collab/pages/form_pagesV2/attendence_page_V2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +42,7 @@ class _LecturerSubjectDetailsV2State extends State<LecturerSubjectDetailsV2> {
       appBar: AppBar(
         title: const Text("Attendance Collab"),
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: _usersStream,
@@ -110,6 +112,15 @@ class _LecturerSubjectDetailsV2State extends State<LecturerSubjectDetailsV2> {
                   .cast(),
             );
           }),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AddSubjectDetails()),
+            );
+          },
+          child: Icon(Icons.add)),
     );
   }
 }

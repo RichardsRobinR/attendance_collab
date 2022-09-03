@@ -33,7 +33,7 @@ class _AddStudentAttendenceState extends State<AddStudentAttendence> {
     final _provider = Provider.of<DataModelView>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Attendance Collab"),
+        title: const Text("Add Student"),
         backgroundColor: Colors.transparent,
       ),
       body: StreamBuilder<QuerySnapshot>(

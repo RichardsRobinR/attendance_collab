@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentAboutPage extends StatefulWidget {
@@ -9,6 +10,7 @@ class StudentAboutPage extends StatefulWidget {
 
 class _StudentAboutPageState extends State<StudentAboutPage> {
   final studentvar = "";
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +18,21 @@ class _StudentAboutPageState extends State<StudentAboutPage> {
       appBar: AppBar(
         title: Text("Student Details"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-            itemCount: 150,
-            itemBuilder: (BuildContext context, int index) =>
-                buildStudentDetailsCard(context, index)),
-      ),
+      body: Text("dfudhf"),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        signOut();
+      }),
       // ),
     );
+  }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const LecturerLogin()),
+    // );
   }
 
   buildStudentDetailsCard(BuildContext context, int index) {

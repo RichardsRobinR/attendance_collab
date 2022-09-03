@@ -14,6 +14,8 @@ class CustomNavigationBar extends StatefulWidget {
 class _CustomNavigationBarState extends State<CustomNavigationBar> {
   int currentPageIndex = 0;
 
+  // String uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

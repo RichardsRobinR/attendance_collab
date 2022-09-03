@@ -2,8 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/lecturer_login.dart';
+import '../widgets/custom_navigatio_bar.dart';
+
 class DataModelView extends ChangeNotifier {
   var db = FirebaseFirestore.instance;
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   String _userId = ' ';
 
   String get userId => _userId;
@@ -76,6 +82,12 @@ class DataModelView extends ChangeNotifier {
     _lecturerSubjectBranch = branch;
   }
 
+  void setUserId(user_id) {
+    _userId = user_id;
+    print("id :" + _userId);
+    changeUserStreamValue();
+  }
+
   void setDefaultDate() {
     _onlyDate = "${_selectedDate.toLocal()}".split(' ')[0];
   }
@@ -119,13 +131,19 @@ class DataModelView extends ChangeNotifier {
     _subjectTotalClasses = subjectTotalClasses;
   }
 
-  Future<void> signInWithEmailAndPassword(emailAddress, password) async {
+  Future<void> signInWithEmailAndPassword(
+      emailAddress, password, context) async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
       _userId = credential.user!.uid.toString();
       changeUserStreamValue();
       print(_userId);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => CustomNavigationBar()),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -133,6 +151,25 @@ class DataModelView extends ChangeNotifier {
         print('Wrong password provided for that user.');
       }
     }
+  }
+
+  void checkLoginStatus(context) async {
+    await _firebaseAuth.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LecturerLogin()),
+        );
+      } else {
+        print('User is signed in!');
+        setUserId(user.uid);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CustomNavigationBar()),
+        );
+      }
+    });
   }
 
   void addSubjects() {
@@ -272,12 +309,15 @@ class DataModelView extends ChangeNotifier {
             subject_attended_v2[_studentSubjectName];
 
         print(data["usn_number"]);
-
-        subject_of_dates.forEach((key, value) {
-          if (key != _onlyDate) {
-            setDateToFalseDefault(data['usn_number']);
-          }
-        });
+        if (subject_of_dates.length == 0) {
+          setDateToFalseDefault(data['usn_number']);
+        } else {
+          subject_of_dates.forEach((key, value) {
+            if (key != _onlyDate) {
+              setDateToFalseDefault(data['usn_number']);
+            }
+          });
+        }
       }
     });
   }

@@ -18,8 +18,8 @@ class StudentAttedenceReport extends StatefulWidget {
 class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
   var db = FirebaseFirestore.instance;
   late Stream<QuerySnapshot> _studentStream;
-
-  int _itemCount = 0;
+  int subjectAttendedTrueCount = 0;
+  Map<dynamic, dynamic> subject_attended_v2_studentSubjectName = {};
 
   late Map<String, dynamic> data = {"ok": "s"};
 
@@ -38,7 +38,7 @@ class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Attendance Collab"),
+        title: const Text("Student List"),
         backgroundColor: Colors.transparent,
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -53,12 +53,37 @@ class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
               return CircularProgressIndicator();
             }
 
-            int i = 0;
             return ListView(
               children: snapshot.data!.docs
                   .map((DocumentSnapshot document) {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
+
+                    Map<dynamic, dynamic> subject_attended_v2 =
+                        data['subject_attended_v2'];
+
+                    subjectAttendedTrueCount = 0;
+                    subject_attended_v2.forEach((key, value) {
+                      if (key == _provider.studentSubjectName) {
+                        subject_attended_v2_studentSubjectName =
+                            subject_attended_v2[_provider.studentSubjectName];
+                        subject_attended_v2_studentSubjectName
+                            .forEach((key, value) {
+                          if (value == true) {
+                            subjectAttendedTrueCount =
+                                subjectAttendedTrueCount + 1;
+                          }
+                        });
+                        //subject_attended_v2_studentSubjectName.length;
+                      }
+                    });
+
+                    //print(data['subject_attended_v2'].toString());
+                    // if (data['subject_attended_v2'] ==
+                    //     _provider.studentSubjectName) {
+                    //   print(data['subject_attended_v2']
+                    //       [_provider.studentSubjectName]);
+                    // }
                     // return ListTile(
                     //   leading: Text((i = i + 1).toString()),
                     //   title: Text(data['student_name'].toString()),
@@ -70,7 +95,11 @@ class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
                     //   trailing: const Text("data"),
                     // );
 
-                    return buildStudentDetailsCard(context, data);
+                    return buildStudentDetailsCard(
+                        context,
+                        data,
+                        subject_attended_v2_studentSubjectName,
+                        subjectAttendedTrueCount);
                   })
                   .toList()
                   .cast(),
@@ -89,7 +118,8 @@ class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
   }
 }
 
-buildStudentDetailsCard(BuildContext context, data) {
+buildStudentDetailsCard(BuildContext context, data,
+    subject_attended_v2_studentSubjectName, subjectAttendedTrueCount) {
   return Card(
     elevation: 5,
     shadowColor: Colors.grey[200],
@@ -129,13 +159,17 @@ buildStudentDetailsCard(BuildContext context, data) {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
+            children: [
               Text(
-                "Branch :  branch",
+                "Branch :  ${data['branch']}",
                 style: TextStyle(fontSize: 13),
               ),
               Text(
-                "Year :  studingInYear",
+                "Year :  ${data['year']}",
+                style: TextStyle(fontSize: 13),
+              ),
+              Text(
+                "Present :  ${subjectAttendedTrueCount} / ${subject_attended_v2_studentSubjectName.length}",
                 style: TextStyle(fontSize: 13),
               ),
             ],
