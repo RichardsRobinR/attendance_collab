@@ -105,7 +105,8 @@ class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
                   .cast(),
             );
           }),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+          label: Text("Add Students"),
           onPressed: () {
             Navigator.push(
               context,
@@ -113,7 +114,7 @@ class _StudentAttedenceReportState extends State<StudentAttedenceReport> {
                   builder: (context) => const AddStudentDetails()),
             );
           },
-          child: Icon(Icons.add)),
+          icon: Icon(Icons.add)),
     );
   }
 }

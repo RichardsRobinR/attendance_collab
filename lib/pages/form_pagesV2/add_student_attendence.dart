@@ -88,7 +88,8 @@ class _AddStudentAttendenceState extends State<AddStudentAttendence> {
           onPressed: () {
             Navigator.pop(context);
           },
-          label: Text("Add")),
+          icon: Icon(Icons.done),
+          label: Text("Done")),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:attendance_collab/pages/about_pages/student_about_page.dart';
+import 'package:attendance_collab/pages/about_pages/lecturer_profile_page.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/form_pagesV2/lecturer_subject_details_V2.dart';
@@ -49,7 +49,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         //   child: const Text('Page 1'),
         // ),
         LecturerSubjectReport(),
-        StudentAboutPage(),
+        // StudentAboutPage(),
+        LecturerProfilePage(),
       ][currentPageIndex],
     );
   }

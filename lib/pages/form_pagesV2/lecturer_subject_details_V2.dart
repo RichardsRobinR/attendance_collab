@@ -112,7 +112,8 @@ class _LecturerSubjectDetailsV2State extends State<LecturerSubjectDetailsV2> {
                   .cast(),
             );
           }),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+          label: Text('Add Subjects'),
           onPressed: () {
             Navigator.push(
               context,
@@ -120,7 +121,7 @@ class _LecturerSubjectDetailsV2State extends State<LecturerSubjectDetailsV2> {
                   builder: (context) => const AddSubjectDetails()),
             );
           },
-          child: Icon(Icons.add)),
+          icon: Icon(Icons.add)),
     );
   }
 }
