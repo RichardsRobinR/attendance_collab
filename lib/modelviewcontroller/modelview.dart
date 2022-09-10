@@ -48,7 +48,11 @@ class DataModelView extends ChangeNotifier {
     'C Programming',
     'Operating Systems',
     'DBMS',
-    'Python'
+    'Python',
+    'Java',
+    'C',
+    'Economics',
+    'Statistics'
   ];
 
   List<String> get subjectList => _subjectList;
